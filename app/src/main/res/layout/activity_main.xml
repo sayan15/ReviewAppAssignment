@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/custom_edittext"
+            android:background="@drawable/custom_edit_text_container"
             android:padding="24dp">
 
             <TextView

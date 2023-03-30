@@ -3,6 +3,8 @@
     <string name="signup">SignUp</string>
     <string name="login">Login</string>
     <string name="password">password</string>
+    <string name="RetypePass">Retype password</string>
     <string name="username">Username</string>
     <string name="welcometext">Login</string>
+    <string name="email">Email</string>
 </resources>

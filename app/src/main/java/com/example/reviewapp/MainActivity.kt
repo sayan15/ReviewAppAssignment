@@ -1,5 +1,6 @@
 package com.example.reviewapp
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         v_btnLogin=findViewById<TextView>(R.id.loginBtn)
         v_btnSignUp=findViewById<TextView>(R.id.SignupBtn)
+        val v_SignPageIntent=Intent(this,SignUp::class.java)
 
 
         v_btnLogin!!.setOnClickListener {
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         v_btnSignUp!!.setOnClickListener {
             v_btnLogin!!.setBackgroundResource(0)
             v_btnSignUp!!.setBackgroundResource(R.drawable.switchbtn)
-            Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show()
+            startActivity(v_SignPageIntent)
         }
 
     }
