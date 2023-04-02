@@ -46,12 +46,21 @@
                 android:drawableLeft="@drawable/baseline_person_24"
                 android:textColor="@color/black"
                 android:drawablePadding="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/userValidty"
+                android:enabled="false"
+                android:padding="1dp"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="@color/red"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/signUp_email"
                 android:background="@drawable/custom_edit_text_container"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:padding="8dp"
                 android:hint="@string/email"
                 android:drawableLeft="@drawable/baseline_email_24"
