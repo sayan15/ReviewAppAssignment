@@ -1,5 +1,6 @@
 package com.example.reviewapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -131,6 +132,9 @@ class SignUp : AppCompatActivity() {
                                 edt_email!!.editableText.clear()
                                 edt_Password!!.editableText.clear()
                                 edt_reTypePass!!.editableText.clear()
+                                val v_SignInIntent= Intent(this,MainActivity::class.java)
+                                startActivity(v_SignInIntent)
+
                             }
                             else{
                                 Toast.makeText(this,"Unable to register try again",Toast.LENGTH_LONG).show()
