@@ -18,6 +18,8 @@ class DbConnector(private val context: Context) {
     val checkUserPassUrl=Url+"usernameAndPassword.php?op=1"
     val readAllCommentsUrl=Url+"viewAllComments.php?op=1"
     val addCommentsUrl=Url+"addComments.php?op=1"
+    val addLikeDislikeUrl=Url+"addLikeDisLike.php?op=1"
+    val updateLikeDislikeUrl=Url+"updateLikeDislike.php?op=1"
      fun inserUser( username: String,password:String,email:String,type:String,callback: (Boolean) -> Unit) {
 
          // Instantiate the RequestQueue.
@@ -116,10 +118,10 @@ class DbConnector(private val context: Context) {
     }
 
     //Read All comments
-    fun readAllComments(callback:(MutableList<Comments>)->Unit){
+    fun readAllComments(user_id:Int,callback:(MutableList<Comments>)->Unit){
         val data= mutableListOf<Comments>()
         val queue=Volley.newRequestQueue(context)
-        val stringRequest=StringRequest(Request.Method.GET,
+        val stringRequest=object :StringRequest(Request.Method.POST,
             readAllCommentsUrl,
             { response ->
                 try{
@@ -127,7 +129,7 @@ class DbConnector(private val context: Context) {
                     val rows = obj.getJSONArray("AllComments")
                     for (i in 0 until rows.length()){
                         val row = rows.getJSONObject(i)
-                        val values=Comments(row.getInt("cmnt_id"),row.getString("user_cmnts"),row.getString("userName"))
+                        val values=Comments(row.getInt("cmnt_id"),row.getString("user_cmnts"),row.getInt("user_id"),row.getString("userName"),row.getString("total_likes"),row.getString("total_unlikes"),row.getString("by_user"))
                         data.add(values)
                     }
                     callback(data)
@@ -141,7 +143,11 @@ class DbConnector(private val context: Context) {
                     Toast.makeText(context, error.message.toString(), Toast.LENGTH_LONG).show()
                 };
             }
-        )
+        ){override fun getParams(): MutableMap<String, String>? {
+                val paras=HashMap<String,String>()
+                paras["user_id"]=user_id.toString()
+                return paras
+            }}
         queue.add(stringRequest)
     }
 
@@ -168,6 +174,70 @@ class DbConnector(private val context: Context) {
                 val paras=HashMap<String,String>()
                 paras["user_id"]=user_id.toString()
                 paras["comment"]=comment
+                return paras
+            }
+        }
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    //add like or dislike reviews
+    fun addLikeOrDislike( user_id: Int,comnt_id:Int,like_status:Int,callback: (Boolean) -> Unit) {
+
+        // Instantiate the RequestQueue.
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST,
+            addLikeDislikeUrl, Response.Listener { response ->
+                try {
+                    val obj = JSONObject(response)
+                    callback(obj.getBoolean("message"))
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener { error ->
+                if (error != null) {
+                    Toast.makeText(context, error.message.toString(), Toast.LENGTH_LONG).show()
+                };
+            }){
+            // Override the getParams() method to specify the data you want to send in the request body.
+            override fun getParams(): MutableMap<String, String>? {
+                val paras=HashMap<String,String>()
+                paras["user_id"]=user_id.toString()
+                paras["cmnt_id"]=comnt_id.toString()
+                paras["like_status"]=like_status.toString()
+                return paras
+            }
+        }
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    //update like or dislike reviews
+    fun updateLikeOrDislike( user_id: Int,comnt_id:Int,like_status:Int,callback: (Boolean) -> Unit) {
+
+        // Instantiate the RequestQueue.
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST,
+            updateLikeDislikeUrl, Response.Listener { response ->
+                try {
+                    val obj = JSONObject(response)
+                    callback(obj.getBoolean("message"))
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener { error ->
+                if (error != null) {
+                    Toast.makeText(context, error.message.toString(), Toast.LENGTH_LONG).show()
+                };
+            }){
+            // Override the getParams() method to specify the data you want to send in the request body.
+            override fun getParams(): MutableMap<String, String>? {
+                val paras=HashMap<String,String>()
+                paras["user_id"]=user_id.toString()
+                paras["cmnt_id"]=comnt_id.toString()
+                paras["like_status"]=like_status.toString()
                 return paras
             }
         }

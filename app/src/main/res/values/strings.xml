@@ -7,4 +7,6 @@
     <string name="username">Username</string>
     <string name="welcometext">Login</string>
     <string name="email">Email</string>
+    <string name="my_likebutton_description">Click to like the review</string>
+    <string name="my_unlilikebutton_description">Click to unlike the review</string>
 </resources>
