@@ -16,6 +16,7 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
         val likeBtn=view.findViewById<ImageButton>(R.id.likeBtn)
         val total_disLike_tctView=view.findViewById<TextView>(R.id.total_dislikes_txtView)
         val unlikeBtn=view.findViewById<ImageButton>(R.id.dislikeBtn)
+        val rlyBtn=view.findViewById<ImageButton>(R.id.repliesBtn)
 
         init {
             //perform like
@@ -30,6 +31,14 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
                 val pos=adapterPosition
                 if(pos!=RecyclerView.NO_POSITION){
                     listner.onClickListnerDisLike(pos)
+                }
+            }
+
+            //perform reply
+            rlyBtn!!.setOnClickListener {
+                val pos=adapterPosition
+                if(pos!=RecyclerView.NO_POSITION){
+                    listner.onClickReply(pos)
                 }
             }
         }
@@ -67,5 +76,6 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
     interface onItemClickListner{
         fun onClickListnerLike(position: Int)
         fun onClickListnerDisLike(position: Int)
+        fun onClickReply(position: Int)
     }
 }

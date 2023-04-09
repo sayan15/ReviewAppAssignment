@@ -9,4 +9,5 @@
     <string name="email">Email</string>
     <string name="my_likebutton_description">Click to like the review</string>
     <string name="my_unlilikebutton_description">Click to unlike the review</string>
+    <string name="replyBtn_description">Click here to view the replies</string>
 </resources>

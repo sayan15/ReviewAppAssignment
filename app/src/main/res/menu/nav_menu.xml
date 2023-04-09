@@ -2,6 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/allReviw"
+        android:title="All Reviews"
+        android:visible="true"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/myReviw"
+        android:title="My Reviews"
+        android:visible="true"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/personalDetails"
+        android:title="My Profile"
+        android:visible="true"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/baseline_lock_24"
         android:title="Logout"

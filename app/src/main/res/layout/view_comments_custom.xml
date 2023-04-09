@@ -88,6 +88,25 @@
             android:orientation="horizontal"
             android:layout_weight="2">
 
+                <TextView
+                    android:id="@+id/total_replies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="left"
+                    android:textColor="@color/lavender"
+                    android:textSize="20sp" />
+                <ImageButton
+                    android:id="@+id/repliesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="@color/white"
+                    android:src="@drawable/cmnt_btn_icon"
+                    android:scaleType="fitEnd"
+                    android:padding="1dp"
+                    android:contentDescription="@string/replyBtn_description"/>
+
             </LinearLayout>
 
         </LinearLayout>

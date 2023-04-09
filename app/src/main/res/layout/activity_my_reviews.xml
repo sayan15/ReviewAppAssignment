@@ -6,21 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/loginimage"
-    tools:context=".HomePage">
-    <com.google.android.material.appbar.AppBarLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MyReviews">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myReview_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/menu_item_container">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/my_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:title="Home" />
-    </com.google.android.material.appbar.AppBarLayout>
-
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimaryVariant"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:title="Home" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -34,16 +28,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
-                android:id="@+id/CustomRecycleView"/>
+                android:id="@+id/myReview_CustomRecycleView"/>
 
 
         </LinearLayout>
     </ScrollView>
-    <Button
-        android:id="@+id/addCmntButton"
-        style="@style/MyButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:text="Add Comment" />
+
 </LinearLayout>
