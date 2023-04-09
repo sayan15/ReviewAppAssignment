@@ -17,6 +17,7 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
         val total_disLike_tctView=view.findViewById<TextView>(R.id.total_dislikes_txtView)
         val unlikeBtn=view.findViewById<ImageButton>(R.id.dislikeBtn)
         val rlyBtn=view.findViewById<ImageButton>(R.id.repliesBtn)
+        val total_replies=view.findViewById<TextView>(R.id.total_replies)
 
         init {
             //perform like
@@ -56,6 +57,7 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
         holder.cmnt.text=data[position].cmnts
         holder.totalLike_tctView.text=data[position].total_likes
         holder.total_disLike_tctView.text=data[position].total_unlikes
+        holder.total_replies.text=data[position].total_replies
         //if user liked it previously
         if(data[position].likeOrNot=="like"){
             holder.unlikeBtn.setImageResource(R.drawable.before_dislike_thump)

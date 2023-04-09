@@ -131,7 +131,7 @@ class DbConnector(private val context: Context) {
                     val rows = obj.getJSONArray("AllComments")
                     for (i in 0 until rows.length()){
                         val row = rows.getJSONObject(i)
-                        val values=Comments(row.getInt("cmnt_id"),row.getString("user_cmnts"),row.getInt("user_id"),row.getString("userName"),row.getString("total_likes"),row.getString("total_unlikes"),row.getString("by_user"))
+                        val values=Comments(row.getInt("cmnt_id"),row.getString("user_cmnts"),row.getInt("user_id"),row.getString("userName"),row.getString("total_likes"),row.getString("total_unlikes"),row.getString("by_user"),row.getString("reply_count"))
                         data.add(values)
                     }
                     callback(data)
@@ -165,7 +165,7 @@ class DbConnector(private val context: Context) {
                     val rows = obj.getJSONArray("AllComments")
                     for (i in 0 until rows.length()){
                         val row = rows.getJSONObject(i)
-                        val values=Comments(row.getInt("cmnt_id"),row.getString("user_cmnts"),row.getInt("user_id"),row.getString("userName"),row.getString("total_likes"),row.getString("total_unlikes"),row.getString("by_user"))
+                        val values=Comments(row.getInt("cmnt_id"),row.getString("user_cmnts"),row.getInt("user_id"),row.getString("userName"),row.getString("total_likes"),row.getString("total_unlikes"),row.getString("by_user"),row.getString("reply_count"))
                         data.add(values)
                     }
                     callback(data)
