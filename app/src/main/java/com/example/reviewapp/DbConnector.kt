@@ -12,7 +12,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class DbConnector(private val context: Context) {
-    val Url = "http://192.168.1.127/reviewapp/"
+    val Url = "http://192.168.1.130/reviewappPhpScripts/"
     val insertUrl=Url+"rank-data-information.php?op=1"
     val checkUserUrl=Url+"CheckUserExist.php?op=1"
     val checkUserPassUrl=Url+"usernameAndPassword.php?op=1"
@@ -22,6 +22,7 @@ class DbConnector(private val context: Context) {
     val addLikeDislikeUrl=Url+"addLikeDisLike.php?op=1"
     val updateLikeDislikeUrl=Url+"updateLikeDislike.php?op=1"
     val readAllReplyUrl=Url+"viewAllReplies.php?op=1"
+    val addReplyUrl=Url+"addReplies.php?op=1"
      fun inserUser( username: String,password:String,email:String,type:String,callback: (Boolean) -> Unit) {
 
          // Instantiate the RequestQueue.
@@ -313,6 +314,38 @@ class DbConnector(private val context: Context) {
                 paras["user_id"]=user_id.toString()
                 paras["cmnt_id"]=comnt_id.toString()
                 paras["like_status"]=like_status.toString()
+                return paras
+            }
+        }
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    //add new reply
+    fun addNewReply( user_id: Int,cmnt_id: Int,reply:String,callback: (Int,Boolean) -> Unit) {
+
+        // Instantiate the RequestQueue.
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST,
+            addReplyUrl, Response.Listener { response ->
+                try {
+                    val obj = JSONObject(response)
+                    callback(obj.getInt("reply_id"),obj.getBoolean("message"))
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener { error ->
+                if (error != null) {
+                    Toast.makeText(context, error.message.toString(), Toast.LENGTH_LONG).show()
+                };
+            }){
+            // Override the getParams() method to specify the data you want to send in the request body.
+            override fun getParams(): MutableMap<String, String>? {
+                val paras=HashMap<String,String>()
+                paras["user_id"]=user_id.toString()
+                paras["cmnt_id"]=cmnt_id.toString()
+                paras["reply"]=reply
                 return paras
             }
         }

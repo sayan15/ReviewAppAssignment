@@ -15,15 +15,11 @@
         android:theme="@style/Theme.ReviewApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".ViewAllRepliesCustomAdapter"
-            android:exported="false" />
+
         <activity
             android:name=".MyReviews"
             android:exported="false" />
-        <activity
-            android:name=".MainReviews"
-            android:exported="false" />
+
         <activity
             android:name=".HomePage"
             android:exported="false" />

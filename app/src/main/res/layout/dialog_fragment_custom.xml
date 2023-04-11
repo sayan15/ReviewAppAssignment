@@ -2,7 +2,9 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -45,6 +47,7 @@
             android:layout_weight="2.5"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/reply_btn_container"
             android:src="@drawable/baseline_arrow_forward"

@@ -17,6 +17,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
     val db =DbConnector(this)
 
     var userId:Int=0
+    var userName:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
         //get userid
         val extras = intent.extras
         userId=extras!!.getInt("UserId")
+        userName=extras!!.getString("UserName")
 
         //impose recycler view
         val listView = findViewById<RecyclerView>(R.id.myReview_CustomRecycleView)
@@ -67,6 +69,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
             R.id.allReviw->{
                 val allReviewIntent= Intent(this,HomePage::class.java)
                 allReviewIntent.putExtra("UserId",userId)
+                allReviewIntent.putExtra("UserName",userName)
                 startActivity(allReviewIntent)
                 true
             }else->return super.onOptionsItemSelected(item)
@@ -177,7 +180,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
     override fun onClickReply(position: Int) {
         var clickedItem:Comments=data[position]
         db.readAllreplies(clickedItem.cmnt_id){data->
-            val dialogFragment = ReplyDialogFragment(data)
+            val dialogFragment = ReplyDialogFragment(data,userId,userName.toString(),clickedItem.cmnt_id,this)
             dialogFragment.show(supportFragmentManager, "ReplyDialogFragment")
         }
     }

@@ -25,6 +25,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
     val db =DbConnector(this)
 
     var userId:Int=0
+    var userName:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
         //get userid
         val extras = intent.extras
         userId=extras!!.getInt("UserId")
+        userName=extras!!.getString("UserName")
 
         val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
         setSupportActionBar(toolbar)
@@ -103,6 +105,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
             R.id.myReviw->{
                 val myReviewIntent= Intent(this,MyReviews::class.java)
                 myReviewIntent.putExtra("UserId",userId)
+                myReviewIntent.putExtra("UserName",userName)
                 startActivity(myReviewIntent)
                 true
             }else->return super.onOptionsItemSelected(item)
@@ -228,7 +231,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
     override fun onClickReply(position: Int) {
         var clickedItem:Comments=data[position]
         db.readAllreplies(clickedItem.cmnt_id){data->
-            val dialogFragment = ReplyDialogFragment(data)
+            val dialogFragment = ReplyDialogFragment(data,userId,userName.toString(),clickedItem.cmnt_id,this)
             dialogFragment.show(supportFragmentManager, "ReplyDialogFragment")
         }
 
