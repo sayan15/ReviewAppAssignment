@@ -125,7 +125,7 @@ class SignUp : AppCompatActivity() {
                         txt_userName!!.setText("* Username already exist")
                     } else if (mess.toBoolean()==false){
                         txt_userName!!.setText("")
-                        dbConnector.inserUser(edt_UsrName!!.text.toString(),edt_Password!!.text.toString(),edt_email!!.text.toString(),"admin",{response->
+                        dbConnector.inserUser(edt_UsrName!!.text.toString(),edt_Password!!.text.toString(),edt_email!!.text.toString(),"user",{response->
                             if (response){
                                 Toast.makeText(this,"Registered Success fully",Toast.LENGTH_LONG).show()
                                 edt_UsrName!!.editableText.clear()

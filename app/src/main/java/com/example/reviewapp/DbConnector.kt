@@ -23,6 +23,7 @@ class DbConnector(private val context: Context) {
     val updateLikeDislikeUrl=Url+"updateLikeDislike.php?op=1"
     val readAllReplyUrl=Url+"viewAllReplies.php?op=1"
     val addReplyUrl=Url+"addReplies.php?op=1"
+    val deleteReviewUrl=Url+"deleteReviews.php?op=1"
      fun inserUser( username: String,password:String,email:String,type:String,callback: (Boolean) -> Unit) {
 
          // Instantiate the RequestQueue.
@@ -94,9 +95,12 @@ class DbConnector(private val context: Context) {
             checkUserPassUrl,
             Response.Listener { response ->
                 try{
+
                     val obj = JSONObject(response)
-                    val value=UserDetails(obj.getInt("user_id"),obj.getString("user_name"))
-                    data.add(value)
+                    if(obj.getBoolean("verified")){
+                        val value=UserDetails(obj.getInt("user_id"),obj.getString("user_name"),obj.getString("user_type"))
+                        data.add(value)
+                    }
                     callback(obj.getBoolean("verified"),data)
                 }
                 catch (e: JSONException)
@@ -346,6 +350,36 @@ class DbConnector(private val context: Context) {
                 paras["user_id"]=user_id.toString()
                 paras["cmnt_id"]=cmnt_id.toString()
                 paras["reply"]=reply
+                return paras
+            }
+        }
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    //delete review
+    fun deleteReview( comnt_id:Int,callback: (Boolean) -> Unit) {
+
+        // Instantiate the RequestQueue.
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST,
+            deleteReviewUrl, Response.Listener { response ->
+                try {
+                    val obj = JSONObject(response)
+                    callback(obj.getBoolean("message"))
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener { error ->
+                if (error != null) {
+                    Toast.makeText(context, error.message.toString(), Toast.LENGTH_LONG).show()
+                };
+            }){
+            // Override the getParams() method to specify the data you want to send in the request body.
+            override fun getParams(): MutableMap<String, String>? {
+                val paras=HashMap<String,String>()
+                paras["cmnt_id"]=comnt_id.toString()
                 return paras
             }
         }

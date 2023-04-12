@@ -3,15 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="@drawable/custom_edit_text_container"
     android:padding="5dp">
+
     <EditText
+        android:id="@+id/cmnt_editTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cmnt_editTxt"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="16dp"
         android:hint="Enter your review here"
+        android:minHeight="48dp"
         android:textSize="15sp"
-        android:layout_marginHorizontal="16dp"/>
+        android:padding="10dp"/>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

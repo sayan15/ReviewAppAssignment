@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner {
+class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner ,Update_Delete.onClickListner{
 
     lateinit var adapter:ViewAllCommentsAdapter
     lateinit var data:MutableList<Comments>
@@ -183,5 +183,27 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
             val dialogFragment = ReplyDialogFragment(data,userId,userName.toString(),clickedItem.cmnt_id,this)
             dialogFragment.show(supportFragmentManager, "ReplyDialogFragment")
         }
+    }
+
+    //call update delete and perform
+    override fun onClickItem(position: Int) {
+        var clickedItem:Comments=data[position]
+        val dialogFragment = Update_Delete(clickedItem.cmnt_id,position,this)
+        dialogFragment.show(supportFragmentManager,"Update_Delete")
+    }
+
+    override fun onDeleteClick(cmnt_id: Int,pos:Int) {
+        db.deleteReview(cmnt_id){result->
+            if (result)
+            {
+                Toast.makeText(this,"Review has been deleted",Toast.LENGTH_SHORT).show()
+                data.removeAt(pos)
+                adapter.notifyItemRemoved(pos)
+            }
+            else{
+                Toast.makeText(this,"Unable to delete the review",Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 }

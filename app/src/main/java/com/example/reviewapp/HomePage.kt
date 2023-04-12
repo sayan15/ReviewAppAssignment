@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner {
+class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner,Update_Delete.onClickListner {
 
     lateinit var adapter:ViewAllCommentsAdapter
     lateinit var data:MutableList<Comments>
@@ -26,6 +26,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
 
     var userId:Int=0
     var userName:String?=null
+    var userType:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
         val extras = intent.extras
         userId=extras!!.getInt("UserId")
         userName=extras!!.getString("UserName")
+        userType=extras!!.getString("UserType")
 
         val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
         setSupportActionBar(toolbar)
@@ -106,6 +108,7 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
                 val myReviewIntent= Intent(this,MyReviews::class.java)
                 myReviewIntent.putExtra("UserId",userId)
                 myReviewIntent.putExtra("UserName",userName)
+                myReviewIntent.putExtra("UserType",userType)
                 startActivity(myReviewIntent)
                 true
             }else->return super.onOptionsItemSelected(item)
@@ -233,6 +236,34 @@ class HomePage : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner 
         db.readAllreplies(clickedItem.cmnt_id){data->
             val dialogFragment = ReplyDialogFragment(data,userId,userName.toString(),clickedItem.cmnt_id,this)
             dialogFragment.show(supportFragmentManager, "ReplyDialogFragment")
+        }
+
+    }
+
+    //call update delete and perform
+    override fun onClickItem(position: Int) {
+        var clickedItem:Comments=data[position]
+        val dialogFragment = Update_Delete(clickedItem.cmnt_id,position,this)
+        dialogFragment.show(supportFragmentManager,"Update_Delete")
+    }
+
+    override fun onDeleteClick(cmnt_id: Int,pos:Int) {
+        if(userType=="admin")
+        {
+            db.deleteReview(cmnt_id){result->
+                if (result)
+                {
+                    Toast.makeText(this,"Review has been deleted",Toast.LENGTH_SHORT).show()
+                    data.removeAt(pos)
+                    adapter.notifyItemRemoved(pos)
+                }
+                else{
+                    Toast.makeText(this,"Unable to delete the review",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        else{
+            Toast.makeText(this,"You are not authorized to perform this action",Toast.LENGTH_SHORT).show()
         }
 
     }

@@ -42,6 +42,14 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
                     listner.onClickReply(pos)
                 }
             }
+
+            //perform delete or update
+            view.setOnClickListener {
+                val pos=adapterPosition
+                if(pos!=RecyclerView.NO_POSITION){
+                    listner.onClickItem(pos)
+                }
+            }
         }
 
     }
@@ -79,5 +87,6 @@ class ViewAllCommentsAdapter(private val data:MutableList<Comments>,
         fun onClickListnerLike(position: Int)
         fun onClickListnerDisLike(position: Int)
         fun onClickReply(position: Int)
+        fun onClickItem(position: Int)
     }
 }

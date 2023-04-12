@@ -27,7 +27,8 @@
         android:orientation="horizontal"
         android:weightSum="3"
         android:layout_margin="10dp"
-        android:background="@drawable/custom_edit_text_container">
+        android:background="@drawable/custom_edit_text_container"
+        android:padding="2dp">
 
         <EditText
             android:id="@+id/replies_edttext"
@@ -35,9 +36,7 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:textColor="@color/black"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="12dp"
-            android:layout_marginBottom="10dp"
             android:layout_weight="0.5"/>
 
         <ImageButton
@@ -45,10 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2.5"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
+
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/reply_btn_container"
             android:src="@drawable/baseline_arrow_forward"
             />

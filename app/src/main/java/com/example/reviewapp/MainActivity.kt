@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                     val v_MainPageIntent=Intent(this,HomePage::class.java)
                     v_MainPageIntent.putExtra("UserName",userDetails[0].username)
                     v_MainPageIntent.putExtra("UserId",userDetails[0].userId)
+                    v_MainPageIntent.putExtra("UserType",userDetails[0].type)
                     startActivity(v_MainPageIntent)
                 }
                 else{
