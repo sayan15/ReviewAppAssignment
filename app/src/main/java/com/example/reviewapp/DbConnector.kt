@@ -24,6 +24,7 @@ class DbConnector(private val context: Context) {
     val readAllReplyUrl=Url+"viewAllReplies.php?op=1"
     val addReplyUrl=Url+"addReplies.php?op=1"
     val deleteReviewUrl=Url+"deleteReviews.php?op=1"
+    val updateReviewUrl=Url+"updateReviews.php?op=1"
      fun inserUser( username: String,password:String,email:String,type:String,callback: (Boolean) -> Unit) {
 
          // Instantiate the RequestQueue.
@@ -262,6 +263,7 @@ class DbConnector(private val context: Context) {
 
     }
 
+
     //add like or dislike reviews
     fun addLikeOrDislike( user_id: Int,comnt_id:Int,like_status:Int,callback: (Boolean) -> Unit) {
 
@@ -380,6 +382,37 @@ class DbConnector(private val context: Context) {
             override fun getParams(): MutableMap<String, String>? {
                 val paras=HashMap<String,String>()
                 paras["cmnt_id"]=comnt_id.toString()
+                return paras
+            }
+        }
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    //update review
+    fun updateReview( comnt_id:Int,comment: String,callback: (Boolean) -> Unit) {
+
+        // Instantiate the RequestQueue.
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST,
+            updateReviewUrl, Response.Listener { response ->
+                try {
+                    val obj = JSONObject(response)
+                    callback(obj.getBoolean("message"))
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener { error ->
+                if (error != null) {
+                    Toast.makeText(context, error.message.toString(), Toast.LENGTH_LONG).show()
+                };
+            }){
+            // Override the getParams() method to specify the data you want to send in the request body.
+            override fun getParams(): MutableMap<String, String>? {
+                val paras=HashMap<String,String>()
+                paras["cmnt_id"]=comnt_id.toString()
+                paras["comment"]=comment
                 return paras
             }
         }

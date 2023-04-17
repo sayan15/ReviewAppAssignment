@@ -3,9 +3,12 @@ package com.example.reviewapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -188,7 +191,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
     //call update delete and perform
     override fun onClickItem(position: Int) {
         var clickedItem:Comments=data[position]
-        val dialogFragment = Update_Delete(clickedItem.cmnt_id,position,this)
+        val dialogFragment = Update_Delete(clickedItem.cmnt_id,clickedItem.cmnts,position,this)
         dialogFragment.show(supportFragmentManager,"Update_Delete")
     }
 
@@ -205,5 +208,37 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
             }
         }
 
+    }
+
+    override fun onUpdateClick(cmnt_id: Int, comment: String, pos: Int) {
+        var clickedItem:Comments=data[pos]
+        //create edit text pop up
+        val builder=AlertDialog.Builder(this)
+        val inflater:LayoutInflater=layoutInflater
+        val myView = inflater.inflate(R.layout.add_comment_edittext,null)
+        val editText:EditText=myView.findViewById<EditText>(R.id.cmnt_editTxt)
+        editText.setText(comment)
+        var edited_cmnt=""
+        with(builder){
+            setTitle("Edit your review here")
+
+            setPositiveButton("Submit"){dialog,which->
+                edited_cmnt=editText.text.toString()
+                db.updateReview(cmnt_id,edited_cmnt){result->
+                    if(result){
+                        clickedItem.cmnts=edited_cmnt
+                        adapter.notifyItemChanged(pos)
+                    }
+                    else{
+                        Toast.makeText(context,"Unable to update the review",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            setNegativeButton("Cancel"){dialog,which->
+
+            }
+            setView(myView)
+            show()
+        }
     }
 }
