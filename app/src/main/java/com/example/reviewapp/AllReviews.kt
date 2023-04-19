@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -13,47 +14,107 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner ,Update_Delete.onClickListner{
+class AllReviews : AppCompatActivity() , ViewAllCommentsAdapter.onItemClickListner,Update_Delete.onClickListner{
 
     lateinit var adapter:ViewAllCommentsAdapter
     lateinit var data:MutableList<Comments>
+    var menuBtn: Button?=null
+    var btn_AddCmnt: Button?=null
     val db =DbConnector(this)
 
     var userId:Int=0
     var userName:String?=null
+    var userType:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_reviews)
+        setContentView(R.layout.activity_all_reviews)
 
-        //initialize toolbar
-        val toolbar=findViewById<Toolbar>(R.id.myReview_toolbar)
-        setSupportActionBar(toolbar)
+        //initialize button
+        btn_AddCmnt=findViewById<Button>(R.id.addCmntButton)
 
-        // Invalidate the options menu to make sure the custom layout is displayed
-        invalidateOptionsMenu()
 
         //get userid
         val extras = intent.extras
         userId=extras!!.getInt("UserId")
         userName=extras!!.getString("UserName")
+        userType=extras!!.getString("UserType")
+
+        val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
+        setSupportActionBar(toolbar)
+
+
+        // Invalidate the options menu to make sure the custom layout is displayed
+        invalidateOptionsMenu()
 
         //impose recycler view
-        val listView = findViewById<RecyclerView>(R.id.myReview_CustomRecycleView)
+        val listView = findViewById<RecyclerView>(R.id.CustomRecycleView)
 
 
         //get the data and inflate to recycler view
-        readAllMyComments(userId,listView)
+        readAllComments(userId,listView)
 
-
+        //add comment button clicked
+        btn_AddCmnt!!.setOnClickListener {
+            //create edit text pop up
+            val builder= AlertDialog.Builder(this)
+            val inflater: LayoutInflater =layoutInflater
+            val myView = inflater.inflate(R.layout.add_comment_edittext,null)
+            val editText: EditText =myView.findViewById<EditText>(R.id.cmnt_editTxt)
+            var cmnt=""
+            with(builder){
+                setTitle("Submit your review here")
+                setPositiveButton("Submit"){dialog,which->
+                    cmnt=editText.text.toString()
+                    //if cmnt is not null only insert review
+                    if(cmnt.isNullOrEmpty()!=true){
+                        userId?.let { id ->
+                            db.addNewComment(id,cmnt) { response ->
+                                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                                if (response) {
+                                    readAllComments(userId, listView)
+                                    Toast.makeText(context,"Thanks  for your review", Toast.LENGTH_SHORT)
+                                }else{
+                                    Toast.makeText(context,"Sorry for the inconvenience we unable to add your review at the moment!",
+                                        Toast.LENGTH_SHORT)
+                                }
+                            }
+                        }
+                    }else{
+                        Toast.makeText(context,"we expect some valid review! Thanks.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                setNegativeButton("Cancel"){dialog,which->
+                    Toast.makeText(context,"we expect your review soon", Toast.LENGTH_SHORT).show()
+                }
+                setView(myView)
+                show()
+            }
+        }
     }
-
+    //create menu btn and activities
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.nav_menu,menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.myReviw->{
+                val myReviewIntent= Intent(this,MyReviews::class.java)
+                myReviewIntent.putExtra("UserId",userId)
+                myReviewIntent.putExtra("UserName",userName)
+                myReviewIntent.putExtra("UserType",userType)
+                startActivity(myReviewIntent)
+                true
+            }else->return super.onOptionsItemSelected(item)
+        }
+    }
     //created this function to recall it again
-    fun readAllMyComments(userId:Int,listView:RecyclerView){
+    fun readAllComments(userId:Int,listView:RecyclerView){
         val layoutManager= LinearLayoutManager(this)
 
         //get all comments and total likes and dis likes
-        db.readAllMyComments(userId) { cmnts->
+        db.readAllComments(userId) { cmnts->
             data=cmnts
             adapter = ViewAllCommentsAdapter(data,this)
 
@@ -62,29 +123,14 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.nav_menu,menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.allReviw->{
-                val allReviewIntent= Intent(this,AllReviews::class.java)
-                allReviewIntent.putExtra("UserId",userId)
-                allReviewIntent.putExtra("UserName",userName)
-                startActivity(allReviewIntent)
-                true
-            }else->return super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onClickListnerLike(position: Int) {
         var clickedItem:Comments=data[position]
         var likes=0
 
         if(clickedItem.likeOrNot=="like"){
-            Toast.makeText(this,"You have already like this review", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"You have already like this review",Toast.LENGTH_SHORT).show()
         }else if(clickedItem.likeOrNot=="unlike"){
             //update unlike to like
             db.updateLikeOrDislike(userId,clickedItem.cmnt_id,1) { result ->
@@ -134,10 +180,10 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
         var likes=0
 
         if(clickedItem.likeOrNot=="unlike"){
-            Toast.makeText(this,"You have already unlike this review", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"You have already unlike this review",Toast.LENGTH_SHORT).show()
         }else if(clickedItem.likeOrNot=="like"){
             //update likw to unlike
-            db.updateLikeOrDislike(userId,clickedItem.cmnt_id,0) { result ->
+            db.updateLikeOrDislike(clickedItem.user_id,clickedItem.cmnt_id,0) { result ->
                 if (result) {
                     if (clickedItem.total_likes.toString().toInt() > 0) {
                         // decrease likes
@@ -186,6 +232,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
             val dialogFragment = ReplyDialogFragment(data,userId,userName.toString(),clickedItem.cmnt_id,this)
             dialogFragment.show(supportFragmentManager, "ReplyDialogFragment")
         }
+
     }
 
     //call update delete and perform
@@ -196,16 +243,22 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
     }
 
     override fun onDeleteClick(cmnt_id: Int,pos:Int) {
-        db.deleteReview(cmnt_id){result->
-            if (result)
-            {
-                Toast.makeText(this,"Review has been deleted",Toast.LENGTH_SHORT).show()
-                data.removeAt(pos)
-                adapter.notifyItemRemoved(pos)
+        if(userType=="admin")
+        {
+            db.deleteReview(cmnt_id){result->
+                if (result)
+                {
+                    Toast.makeText(this,"Review has been deleted",Toast.LENGTH_SHORT).show()
+                    data.removeAt(pos)
+                    adapter.notifyItemRemoved(pos)
+                }
+                else{
+                    Toast.makeText(this,"Unable to delete the review",Toast.LENGTH_SHORT).show()
+                }
             }
-            else{
-                Toast.makeText(this,"Unable to delete the review",Toast.LENGTH_SHORT).show()
-            }
+        }
+        else{
+            Toast.makeText(this,"You are not authorized to perform this action",Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -219,26 +272,32 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
         val editText:EditText=myView.findViewById<EditText>(R.id.cmnt_editTxt)
         editText.setText(comment)
         var edited_cmnt=""
-        with(builder){
-            setTitle("Edit your review here")
+        if(userType=="admin" || clickedItem.user_id==userId){
+            with(builder){
+                setTitle("Edit your review here")
 
-            setPositiveButton("Submit"){dialog,which->
-                edited_cmnt=editText.text.toString()
-                db.updateReview(cmnt_id,edited_cmnt){result->
-                    if(result){
-                        clickedItem.cmnts=edited_cmnt
-                        adapter.notifyItemChanged(pos)
-                    }
-                    else{
-                        Toast.makeText(context,"Unable to update the review",Toast.LENGTH_SHORT).show()
+                setPositiveButton("Submit"){dialog,which->
+                    edited_cmnt=editText.text.toString()
+                    db.updateReview(cmnt_id,edited_cmnt){result->
+                        if(result){
+                            clickedItem.cmnts=edited_cmnt
+                            adapter.notifyItemChanged(pos)
+                        }
+                        else{
+                            Toast.makeText(context,"Unable to update the review",Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-            }
-            setNegativeButton("Cancel"){dialog,which->
+                setNegativeButton("Cancel"){dialog,which->
 
+                }
+                setView(myView)
+                show()
             }
-            setView(myView)
-            show()
         }
+        else{
+            Toast.makeText(this,"You can't able to edit this review",Toast.LENGTH_SHORT).show()
+        }
+
     }
 }

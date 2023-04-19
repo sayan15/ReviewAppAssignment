@@ -12,7 +12,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class DbConnector(private val context: Context) {
-    val Url = "http://192.168.1.130/reviewappPhpScripts/"
+    val Url = "http://172.31.176.1/reviewappPhpScripts/"
     val insertUrl=Url+"rank-data-information.php?op=1"
     val checkUserUrl=Url+"CheckUserExist.php?op=1"
     val checkUserPassUrl=Url+"usernameAndPassword.php?op=1"

@@ -8,7 +8,6 @@
     android:background="@drawable/loginimage"
     tools:context=".HomePage">
     <com.google.android.material.appbar.AppBarLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/menu_item_container">
@@ -20,33 +19,209 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:title="Home" />
     </com.google.android.material.appbar.AppBarLayout>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:padding="2dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/profile_icon_container">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/profile_icon"
+                android:padding="10dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:id="@+id/CustomRecycleView"/>
-
+            </ImageView>
 
         </LinearLayout>
-    </ScrollView>
-    <Button
-        android:id="@+id/addCmntButton"
-        style="@style/MyButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:text="Add Comment"
-        android:layout_margin="20dp"/>
+
+
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="5dp"
+                android:padding="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:layout_margin="5dp"
+                    android:weightSum="3">
+
+                    <EditText
+                        android:id="@+id/homepage_userEdttext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        tools:ignore="TouchTargetSizeCheck"
+                        android:text="Username"></EditText>
+
+                    <ImageButton
+                        android:id="@+id/usernameEdt_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2.5"
+                        android:background="@drawable/reply_btn_container"
+                        android:src="@drawable/baseline_edit_icon"
+                        tools:ignore="TouchTargetSizeCheck"
+                        android:contentDescription="username button"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:weightSum="3">
+
+                    <EditText
+                        android:id="@+id/homepage_emailEdttext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="email"></EditText>
+
+                    <ImageButton
+                        android:id="@+id/emailEdt_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2.5"
+                        android:background="@drawable/reply_btn_container"
+                        android:src="@drawable/baseline_edit_icon"
+                        android:contentDescription="email_btn" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="6dp"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:verticalSpacing="6dp"
+        android:columnOrderPreserved="false"
+        android:alignmentMode="alignMargins"
+        android:layout_marginTop="2dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageButton
+                    android:id="@+id/allReview_btn"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_all_reviews"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="To view the All Reviews"/>
+
+                <TextView
+                    android:id="@+id/allReview_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:padding="4dp"
+                    android:text="@string/all_reviews"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/myReview_btn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:padding="4dp"
+                android:src="@drawable/my_reviews"
+                android:backgroundTint="@color/white"
+                android:contentDescription="To view the My Reviews"/>
+
+            <TextView
+                android:id="@+id/myReview_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:padding="4dp"
+                android:text="My reviews"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </GridLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="5dp"
+                android:padding="5dp">
+                <com.github.mikephil.charting.charts.BarChart
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/barChart"
+                    android:padding="10dp">
+
+                </com.github.mikephil.charting.charts.BarChart>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+
 </LinearLayout>
