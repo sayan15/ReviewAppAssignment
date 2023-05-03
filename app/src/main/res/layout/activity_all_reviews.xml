@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/loginimage"
+    android:id="@+id/allViewParent"
     tools:context=".AllReviews">
     <com.google.android.material.appbar.AppBarLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:title="Home" />
+            app:title="All Reviews" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView

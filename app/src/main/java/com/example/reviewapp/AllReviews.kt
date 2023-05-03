@@ -1,15 +1,14 @@
 package com.example.reviewapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,6 @@ class AllReviews : AppCompatActivity() , ViewAllCommentsAdapter.onItemClickListn
 
     lateinit var adapter:ViewAllCommentsAdapter
     lateinit var data:MutableList<Comments>
-    var menuBtn: Button?=null
     var btn_AddCmnt: Button?=null
     val db =DbConnector(this)
 
@@ -41,6 +39,7 @@ class AllReviews : AppCompatActivity() , ViewAllCommentsAdapter.onItemClickListn
         userType=extras!!.getString("UserType")
 
         val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
+
         setSupportActionBar(toolbar)
 
 
@@ -49,62 +48,43 @@ class AllReviews : AppCompatActivity() , ViewAllCommentsAdapter.onItemClickListn
 
         //impose recycler view
         val listView = findViewById<RecyclerView>(R.id.CustomRecycleView)
-
-
         //get the data and inflate to recycler view
         readAllComments(userId,listView)
 
         //add comment button clicked
         btn_AddCmnt!!.setOnClickListener {
             //create edit text pop up
-            val builder= AlertDialog.Builder(this)
-            val inflater: LayoutInflater =layoutInflater
-            val myView = inflater.inflate(R.layout.add_comment_edittext,null)
-            val editText: EditText =myView.findViewById<EditText>(R.id.cmnt_editTxt)
-            var cmnt=""
-            with(builder){
-                setTitle("Submit your review here")
-                setPositiveButton("Submit"){dialog,which->
-                    cmnt=editText.text.toString()
-                    //if cmnt is not null only insert review
-                    if(cmnt.isNullOrEmpty()!=true){
-                        userId?.let { id ->
-                            db.addNewComment(id,cmnt) { response ->
-                                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
-                                if (response) {
-                                    readAllComments(userId, listView)
-                                    Toast.makeText(context,"Thanks  for your review", Toast.LENGTH_SHORT)
-                                }else{
-                                    Toast.makeText(context,"Sorry for the inconvenience we unable to add your review at the moment!",
-                                        Toast.LENGTH_SHORT)
-                                }
-                            }
-                        }
-                    }else{
-                        Toast.makeText(context,"we expect some valid review! Thanks.", Toast.LENGTH_SHORT).show()
-                    }
+            val dialogFragment = AddCommentFragment(this,userId)
+            dialogFragment.setOnDialogDismissedListener(object : AddCommentFragment.OnDialogDismissedListener {
+                override fun onDialogDismissed() {
+                    // Code to execute after the dialog is dismissed
+                    readAllComments(userId, listView)
                 }
-                setNegativeButton("Cancel"){dialog,which->
-                    Toast.makeText(context,"we expect your review soon", Toast.LENGTH_SHORT).show()
-                }
-                setView(myView)
-                show()
-            }
+            })
+            dialogFragment.show(supportFragmentManager, "AddCommentFragment")
+
         }
     }
+
     //create menu btn and activities
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu,menu)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.myReviw->{
-                val myReviewIntent= Intent(this,MyReviews::class.java)
-                myReviewIntent.putExtra("UserId",userId)
-                myReviewIntent.putExtra("UserName",userName)
-                myReviewIntent.putExtra("UserType",userType)
-                startActivity(myReviewIntent)
+            android.R.id.home -> {
+                val homeIntent= Intent(this,HomePage::class.java)
+                homeIntent.putExtra("UserId",userId)
+                homeIntent.putExtra("UserName",userName)
+                homeIntent.putExtra("UserType",userType)
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(homeIntent)
+                true
+            }
+
+            R.id.logout->{
                 true
             }else->return super.onOptionsItemSelected(item)
         }
@@ -122,8 +102,6 @@ class AllReviews : AppCompatActivity() , ViewAllCommentsAdapter.onItemClickListn
             listView.layoutManager=layoutManager
         }
     }
-
-
 
     override fun onClickListnerLike(position: Int) {
         var clickedItem:Comments=data[position]
@@ -299,5 +277,12 @@ class AllReviews : AppCompatActivity() , ViewAllCommentsAdapter.onItemClickListn
             Toast.makeText(this,"You can't able to edit this review",Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    //avoid going back to previous activity
+    override fun onKeyDown(keyCode: Int, event:KeyEvent?): Boolean {
+        return if (keyCode == KeyEvent.KEYCODE_BACK) {
+            false
+        } else super.onKeyDown(keyCode, event)
     }
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageButton
 import androidx.appcompat.widget.Toolbar
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
@@ -21,6 +22,9 @@ class HomePage : AppCompatActivity(){
     var userId:Int=0
     var userName:String?=null
     var userType:String?=null
+
+    var allReviewBtn:ImageButton?=null
+    var myReviewBtn:ImageButton?=null
 
     val db =DbConnector(this)
     lateinit var data:MutableList<Comments>
@@ -38,10 +42,10 @@ class HomePage : AppCompatActivity(){
         val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
         setSupportActionBar(toolbar)
 
-        //assign values to username and email
 
         // Invalidate the options menu to make sure the custom layout is displayed
         invalidateOptionsMenu()
+
 
         //Create barchart data set
         // get all comments and total likes and dis likes
@@ -51,7 +55,7 @@ class HomePage : AppCompatActivity(){
                 BarEntry(1f, data.count{it.user_id==userId}.toFloat()),
                 BarEntry(2f, data.count().toFloat()),
             )
-            val labels = listOf("My Review", "All Reviews")
+            val labels = listOf("All Reviews", "My Review")
             val barchart=findViewById<BarChart>(R.id.barChart)
             val barDataSet=BarDataSet(entries,"Number of Reviews")
             barDataSet.setColors(Color.RED,Color.BLUE)
@@ -70,6 +74,28 @@ class HomePage : AppCompatActivity(){
             barchart.invalidate()
         }
 
+        //Navigate to all Review
+        allReviewBtn=findViewById(R.id.allReview_btn)
+        allReviewBtn!!.setOnClickListener {
+            val allReviewIntent= Intent(this,AllReviews::class.java)
+            allReviewIntent.putExtra("UserId",userId)
+            allReviewIntent.putExtra("UserName",userName)
+            allReviewIntent.putExtra("UserType",userType)
+            allReviewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(allReviewIntent)
+        }
+
+        //Navigate to my Review
+        myReviewBtn=findViewById(R.id.myReview_btn)
+        myReviewBtn!!.setOnClickListener {
+            val myReviewIntent= Intent(this,MyReviews::class.java)
+            myReviewIntent.putExtra("UserId",userId)
+            myReviewIntent.putExtra("UserName",userName)
+            myReviewIntent.putExtra("UserType",userType)
+            myReviewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(myReviewIntent)
+        }
+
     }
 
     //create menu btn and activities
@@ -79,21 +105,8 @@ class HomePage : AppCompatActivity(){
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.allReviw->{
-                val allReviewIntent= Intent(this,AllReviews::class.java)
-                allReviewIntent.putExtra("UserId",userId)
-                allReviewIntent.putExtra("UserName",userName)
-                allReviewIntent.putExtra("UserType",userType)
-                startActivity(allReviewIntent)
-                true
-            }
 
-            R.id.myReviw->{
-                val myReviewIntent= Intent(this,MyReviews::class.java)
-                myReviewIntent.putExtra("UserId",userId)
-                myReviewIntent.putExtra("UserName",userName)
-                myReviewIntent.putExtra("UserType",userType)
-                startActivity(myReviewIntent)
+            R.id.logout->{
                 true
             }else->return super.onOptionsItemSelected(item)
         }

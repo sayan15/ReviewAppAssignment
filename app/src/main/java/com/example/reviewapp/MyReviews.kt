@@ -3,6 +3,7 @@ package com.example.reviewapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -21,6 +22,8 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
 
     var userId:Int=0
     var userName:String?=null
+    var userType:String?=null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,7 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
         val extras = intent.extras
         userId=extras!!.getInt("UserId")
         userName=extras!!.getString("UserName")
+        userType=extras!!.getString("UserType")
 
         //impose recycler view
         val listView = findViewById<RecyclerView>(R.id.myReview_CustomRecycleView)
@@ -64,16 +68,23 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu,menu)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.allReviw->{
-                val allReviewIntent= Intent(this,AllReviews::class.java)
-                allReviewIntent.putExtra("UserId",userId)
-                allReviewIntent.putExtra("UserName",userName)
-                startActivity(allReviewIntent)
+            android.R.id.home -> {
+                val homeIntent= Intent(this,HomePage::class.java)
+                homeIntent.putExtra("UserId",userId)
+                homeIntent.putExtra("UserName",userName)
+                homeIntent.putExtra("UserType",userType)
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(homeIntent)
+                true
+            }
+
+            R.id.logout->{
                 true
             }else->return super.onOptionsItemSelected(item)
         }
@@ -240,5 +251,12 @@ class MyReviews : AppCompatActivity(), ViewAllCommentsAdapter.onItemClickListner
             setView(myView)
             show()
         }
+    }
+
+    //avoid going back to previous activity
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return if (keyCode == KeyEvent.KEYCODE_BACK) {
+            false
+        } else super.onKeyDown(keyCode, event)
     }
 }
